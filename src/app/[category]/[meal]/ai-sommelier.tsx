@@ -11,12 +11,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { meals } from '@/lib/data';
 
 export default function AiSommelier({ mealName }: { mealName: string }) {
   const [suggestion, setSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCard, setShowCard] = useState(false);
+
+  const availableDrinks = meals
+    .filter((meal) => meal.category === 'icecekler')
+    .map((drink) => drink.name);
 
   const handleSuggestion = async () => {
     setIsLoading(true);
@@ -25,7 +30,7 @@ export default function AiSommelier({ mealName }: { mealName: string }) {
     setShowCard(true);
 
     try {
-      const result = await suggestDrinkPairing({ mealName });
+      const result = await suggestDrinkPairing({ mealName, availableDrinks });
       setSuggestion(result.pairingSuggestion);
     } catch (err) {
       setError('Öneri alınırken bir hata oluştu. Lütfen tekrar deneyin.');

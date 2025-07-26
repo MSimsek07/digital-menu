@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const SuggestDrinkPairingInputSchema = z.object({
   mealName: z.string().describe('The name of the meal.'),
+  availableDrinks: z.array(z.string()).describe('A list of available drinks to choose from.'),
 });
 export type SuggestDrinkPairingInput = z.infer<typeof SuggestDrinkPairingInputSchema>;
 
@@ -29,11 +30,14 @@ const suggestDrinkPairingPrompt = ai.definePrompt({
   name: 'suggestDrinkPairingPrompt',
   input: {schema: SuggestDrinkPairingInputSchema},
   output: {schema: SuggestDrinkPairingOutputSchema},
-  prompt: `You are an expert sommelier. A customer is asking for a drink pairing for the meal "{{{mealName}}}".
+  prompt: `Sen uzman bir sommelier'sin. Bir müşteri "{{{mealName}}}" yemeği için içecek önerisi istiyor.
 
-  Suggest an ideal drink (alcoholic or non-alcoholic) that would complement this dish.
+  Bu yemeği tamamlayacak ideal bir içecek öner. Önerini SADECE aşağıdaki listeden seçebilirsin:
+  {{#each availableDrinks}}
+  - {{{this}}}
+  {{/each}}
   
-  Provide a brief, one or two sentence explanation for your suggestion. For example: "For Adana Kebab, I recommend a classic Şalgam. Its sharp, tangy flavor cuts through the richness of the meat."`,
+  Önerin için kısa, bir veya iki cümlelik bir açıklama yap. Örneğin: "Adana Kebabı için klasik bir Şalgam suyu öneririm. Keskin ve mayhoş tadı, etin zenginliğini dengeler."`,
 });
 
 const suggestDrinkPairingFlow = ai.defineFlow(
