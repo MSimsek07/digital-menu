@@ -3,8 +3,9 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowLeft, Bot } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import AiSommelier from './ai-sommelier';
 
 export default function MealDetailPage({ params }: { params: { category: string; meal: string } }) {
   const meal = meals.find((m) => m.id === params.meal && m.category === params.category);
@@ -61,12 +62,7 @@ export default function MealDetailPage({ params }: { params: { category: string;
           </div>
           
           <div className="mt-8">
-             <Button asChild>
-                <Link href={`/ai-enhance?mealName=${encodeURIComponent(meal.name)}&description=${encodeURIComponent(meal.description)}`}>
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Açıklamayı AI ile Geliştir
-                </Link>
-             </Button>
+            <AiSommelier mealName={meal.name} />
           </div>
         </div>
       </div>

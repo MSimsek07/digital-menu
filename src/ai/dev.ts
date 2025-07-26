@@ -1,4 +1,4 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/enhance-meal-descriptions.ts';
+import '@/ai/flows/suggest-drink-pairing.ts';
