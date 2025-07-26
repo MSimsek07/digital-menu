@@ -22,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className="scroll-smooth" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", alegreya.variable)}>
+    <html lang="tr" className="scroll-smooth">
+      <body className={cn("min-h-screen bg-background font-sans antialiased", alegreya.variable)} suppressHydrationWarning>
         <div className="relative flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>
