@@ -1,53 +1,53 @@
 'use server';
 
 /**
- * @fileOverview This file defines a Genkit flow for suggesting drink pairings for a meal.
+ * @fileOverview This file defines a Genkit flow for suggesting food pairings for a meal.
  *
- * - suggestDrinkPairing - A function that suggests a drink pairing for a given meal.
- * - SuggestDrinkPairingInput - The input type for the suggestDrinkPairing function.
- * - SuggestDrinkPairingOutput - The return type for the suggestDrinkPairing function.
+ * - suggestPairing - A function that suggests a pairing for a given meal.
+ * - SuggestPairingInput - The input type for the suggestPairing function.
+ * - SuggestPairingOutput - The return type for the suggestPairing function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const SuggestDrinkPairingInputSchema = z.object({
+const SuggestPairingInputSchema = z.object({
   mealName: z.string().describe('The name of the meal.'),
-  availableDrinks: z.array(z.string()).describe('A list of available drinks to choose from.'),
+  availableItems: z.array(z.string()).describe('A list of all available menu items to choose from.'),
 });
-export type SuggestDrinkPairingInput = z.infer<typeof SuggestDrinkPairingInputSchema>;
+export type SuggestPairingInput = z.infer<typeof SuggestPairingInputSchema>;
 
-const SuggestDrinkPairingOutputSchema = z.object({
-  pairingSuggestion: z.string().describe('The suggested drink pairing for the meal, including a brief explanation.'),
+const SuggestPairingOutputSchema = z.object({
+  pairingSuggestion: z.string().describe('The suggested pairing for the meal, including a brief explanation.'),
 });
-export type SuggestDrinkPairingOutput = z.infer<typeof SuggestDrinkPairingOutputSchema>;
+export type SuggestPairingOutput = z.infer<typeof SuggestPairingOutputSchema>;
 
-export async function suggestDrinkPairing(input: SuggestDrinkPairingInput): Promise<SuggestDrinkPairingOutput> {
-  return suggestDrinkPairingFlow(input);
+export async function suggestPairing(input: SuggestPairingInput): Promise<SuggestPairingOutput> {
+  return suggestPairingFlow(input);
 }
 
-const suggestDrinkPairingPrompt = ai.definePrompt({
-  name: 'suggestDrinkPairingPrompt',
-  input: {schema: SuggestDrinkPairingInputSchema},
-  output: {schema: SuggestDrinkPairingOutputSchema},
-  prompt: `Sen uzman bir sommelier'sin. Bir müşteri "{{{mealName}}}" yemeği için içecek önerisi istiyor.
+const suggestPairingPrompt = ai.definePrompt({
+  name: 'suggestPairingPrompt',
+  input: {schema: SuggestPairingInputSchema},
+  output: {schema: SuggestPairingOutputSchema},
+  prompt: `Sen uzman bir gurmesin. Bir müşteri "{{{mealName}}}" yemeğinin yanına ne iyi gideceğini soruyor.
 
-  Bu yemeği tamamlayacak ideal bir içecek öner. Önerini SADECE aşağıdaki listeden seçebilirsin:
-  {{#each availableDrinks}}
+  Bu yemeği tamamlayacak ideal bir ürün (başka bir yemek, tatlı, veya içecek) öner. Önerini SADECE aşağıdaki listeden seçebilirsin:
+  {{#each availableItems}}
   - {{{this}}}
   {{/each}}
   
-  Önerin için kısa, bir veya iki cümlelik bir açıklama yap. Örneğin: "Adana Kebabı için klasik bir Şalgam suyu öneririm. Keskin ve mayhoş tadı, etin zenginliğini dengeler."`,
+  Önerin için kısa, bir veya iki cümlelik bir açıklama yap. Örneğin: "Adana Kebabı için klasik bir Şalgam suyu öneririm. Keskin ve mayhoş tadı, etin zenginliğini dengeler." veya "Mercimek çorbasından sonra ana yemek olarak İskender Kebabı harika gider."`,
 });
 
-const suggestDrinkPairingFlow = ai.defineFlow(
+const suggestPairingFlow = ai.defineFlow(
   {
-    name: 'suggestDrinkPairingFlow',
-    inputSchema: SuggestDrinkPairingInputSchema,
-    outputSchema: SuggestDrinkPairingOutputSchema,
+    name: 'suggestPairingFlow',
+    inputSchema: SuggestPairingInputSchema,
+    outputSchema: SuggestPairingOutputSchema,
   },
   async input => {
-    const {output} = await suggestDrinkPairingPrompt(input);
+    const {output} = await suggestPairingPrompt(input);
     return output!;
   }
 );

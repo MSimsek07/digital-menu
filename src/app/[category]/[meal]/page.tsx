@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Bot } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import AiSommelier from './ai-sommelier';
+import AiGurme from './ai-sommelier';
 
 export default function MealDetailPage({ params }: { params: { category: string; meal: string } }) {
   const meal = meals.find((m) => m.id === params.meal && m.category === params.category);
@@ -62,7 +62,7 @@ export default function MealDetailPage({ params }: { params: { category: string;
           </div>
           
           <div className="mt-8">
-            <AiSommelier mealName={meal.name} />
+            <AiGurme mealName={meal.name} />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { suggestDrinkPairing } from '@/ai/flows/suggest-drink-pairing';
+import { suggestPairing } from '@/ai/flows/suggest-drink-pairing';
 import { Button } from '@/components/ui/button';
 import { Bot, Loader2 } from 'lucide-react';
 import {
@@ -13,15 +13,16 @@ import {
 } from '@/components/ui/card';
 import { meals } from '@/lib/data';
 
-export default function AiSommelier({ mealName }: { mealName: string }) {
+export default function AiGurme({ mealName }: { mealName: string }) {
   const [suggestion, setSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCard, setShowCard] = useState(false);
 
-  const availableDrinks = meals
-    .filter((meal) => meal.category === 'icecekler')
-    .map((drink) => drink.name);
+  // Exclude the current meal from suggestions
+  const availableItems = meals
+    .filter((item) => item.name !== mealName)
+    .map((item) => item.name);
 
   const handleSuggestion = async () => {
     setIsLoading(true);
@@ -30,7 +31,7 @@ export default function AiSommelier({ mealName }: { mealName: string }) {
     setShowCard(true);
 
     try {
-      const result = await suggestDrinkPairing({ mealName, availableDrinks });
+      const result = await suggestPairing({ mealName, availableItems });
       setSuggestion(result.pairingSuggestion);
     } catch (err) {
       setError('Öneri alınırken bir hata oluştu. Lütfen tekrar deneyin.');
@@ -50,7 +51,7 @@ export default function AiSommelier({ mealName }: { mealName: string }) {
     return (
       <Button onClick={handleSuggestion}>
         <Bot className="mr-2 h-4 w-4" />
-        AI'dan İçecek Önerisi Al
+        AI'dan Öneri Al
       </Button>
     );
   }
@@ -61,12 +62,12 @@ export default function AiSommelier({ mealName }: { mealName: string }) {
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
                 <Bot className="h-6 w-6 text-primary" />
-                <CardTitle className="font-headline text-xl">AI Sommelier</CardTitle>
+                <CardTitle className="font-headline text-xl">AI Gurme</CardTitle>
             </div>
             <Button variant="ghost" size="sm" onClick={handleClose}>Kapat</Button>
         </div>
         <CardDescription>
-          Yapay zeka, "{mealName}" için içecek önerisinde bulunuyor.
+          Yapay zeka, "{mealName}" için öneride bulunuyor.
         </CardDescription>
       </CardHeader>
       <CardContent>
